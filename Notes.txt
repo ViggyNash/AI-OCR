@@ -1,0 +1,16 @@
+Feature definition:
+	Features must have discrete values
+	P(fx|Ij) = count(fx|Ij)/count(Ij)
+		= # times feature has value x in training images with class j / # training images of class j
+	Percentage matrix: [image class][feature][feature value]
+
+Naive bayes:
+	P(Ij|f1, f2 ... fx) = P(Ij) * sum[i = 1 ... x](P(fi|Ij)) / P(f1, f2 ... fx)
+	For training, simply update percentages by incrementing corresponding values
+	For testing, apply above bayes network function for each possible Ij (image class), take the highest percentage
+
+Perceptron:
+	Step 1: Fill weights for each feature (wight vector) with random number from 0 ... 1.
+	Step 2: Multiply weight vector with feature value, set that as new weight value for that feature
+	Testing: Mulitply each feature with the corresponding weight, and sum the weights together
+		do this for weight vector of every class. Highest summation is closest possiblity.

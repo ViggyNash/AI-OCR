@@ -1,0 +1,7 @@
+1) Build block feature detection
+2/3) Build Bayes/Perceptron
+
+To decide later:
+	Do we want to do horizontal component counting for feature detection in numbers?
+	What will our third model be?
+	Gradient-based block feature detection?
