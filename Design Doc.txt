@@ -1,0 +1,54 @@
+Pipeline:
+	TrainingDriver(training data file, training label file, training model)
+		[FeaturesList[label, feature values]] Feature Extraction (training data segment, training label)
+		[No return, output to model data to file] Training(FeaturesList, training model)
+			Bayes
+			Perceptron
+			?
+
+	TestingDriver(training model, training model data file, input data)
+		[FeaturesList[label, feature values][]] Feature Extraction (training data, training file)
+		[resulting label, accuracy] Test Input(training model, FeaturesList)
+
+
+
+
+Training.py:
+	Arguments: 
+		training data file: path for training data file
+		training label file: path for training label file 
+		training model: ML Model to train ('bayes', 'perceptron', 'other')
+
+	Functions:
+		extract:
+			input: 1
+				training data segment (char[][])
+			return: 1
+				feature values for segment (int[])
+
+Bayes.py:
+	Arugments: none
+	Globals: 
+		training model data (int[][][])
+	Functions:
+		getModelData: gets model data from file and stores it in global variable
+			intput: 1
+				training model data file (string)
+			output: 0
+		bayesTraining: generate training model data and store to file
+			input: 2
+				list of extracted feature values (int[][])
+				corresponding labels (T[])
+			output: 0
+		bayesTest: determine class of given input
+			input: 1
+				input data segment (char[][])
+			output: 2
+				corresponding label (T)
+				accuracy (float)
+
+Training model data file:
+	bData: 
+		First line is header: [# features]
+		Rows = classes
+		Columns = serialized 2d matrix [feature #][feature value]
