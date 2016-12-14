@@ -4,23 +4,27 @@ classCounts = []
 
 def getModelData(file = 'bData.txt')
 	try:
-		file = open(file, 'r')
+		fileObj = open(file, 'r')
 		break;
-	except IOError as e
-		print("IOError: File "+file+" not found.")
+	except IOError
+		print "IOError: File "+file+" not found, unable to read model data."
 		sys.exit()
 
-	data = file.read()
+	data = fileObj.read()
 	list = data.splitlines()
 	classCount = len(list) - 1
 	featCount = int(list[0].strip())
 	valCount = len(list[1]) / featCount
 
+	modelData = [classCount][featCOunt][valCount]
+	classCounts = zeroes(classCount)
+
 	for i in range(1, classCount)
 		line = list[i].split(' ')
 		for j = range(featCount)
 			for k = range(valCount)
-				modelData[i][j][k] = line[j * valCount + k]
+				modelData[i][j][k] = int(line[j * valCount + k])
+				classCount[i] += modelData[i][j][k]
 
 
 def bayesTraining(FeaturesList, LabelsList, labelMapping, valRange)
@@ -38,9 +42,12 @@ def bayesTraining(FeaturesList, LabelsList, labelMapping, valRange)
 				output += str(modelData[classIdx][j][Features[j][k]]) +  ' '
 		output += '\n'
 
-	file = open('bData.txt','w')
-	file.write(output)
-
+	try
+		file = open('bData.txt','w')
+		file.write(output)
+		break;
+	except IOError
+		print "IOError: Unable to write model data to bData.txt, terminating training."
 
 def bayesTest(inputFeatures, labelMapping)
 	
