@@ -44,7 +44,7 @@ except IOError:
 	sys.exit()
 labels = labelFile.read().split('\n')
 trueLen = round(len(labels) / 10, 0) * 10
-labels = labels(:trueLen)
+labels = labels[:trueLen]
 
 #get data
 try:
@@ -54,7 +54,7 @@ except IOError:
 	sys.exit()
 data = dataFile.read().split('\n')
 trueLen = round(len(data) / 10, 0) * 10
-data = data(:trueLen)
+data = data[:trueLen]
 
 # determine data segment size and label mapping
 type = args[3].lower()
