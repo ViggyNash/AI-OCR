@@ -6,7 +6,7 @@ def extract(data, type):
 	size = [4] # height/width of sub blocks, num blocks per column/row
 	if type == 'number':
 		size = [7,7,4,4]	#16 total blocks
-	else if type == 'face':
+	elif type == 'face':
 		size = [10,10,7,6] 	#42 total blocks
 	else:
 		print 'Invalid type.'
@@ -82,9 +82,9 @@ model = args[2].lower()
 if model == 'bayes':
 	# Bayes
 	bayesTraining(featuresList, labels, labelMapping, valRange)
-else if model == 'percept':
+elif model == 'percept':
 	# Perceptron
-else if model == 'other':
+elif model == 'other':
 	# Other
 	print 'NOT YET IMPLEMENTED'
 else :
