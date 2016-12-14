@@ -14,22 +14,25 @@ Pipeline:
 Feature mapping:
 	
 
-Training.py:
+driver.py
 	Arguments: 
 		training data file: path for training data file
 		training label file: path for training label file 
 		training model: ML Model to train ('bayes', 'perceptron', 'other')
+		data type: type of data ('number', 'face')
+	usage:
+		for training: driver [data file][label file][model to use]
+		for testing: drive [data file to test][model to use]
 
 	Functions:
 		extract:
 			input: 	1
-				training data segment (char[][])
-			return: 3
+				training data segment (int[][])
+			return: 2
 				feature values for segment (int[])
 				value range for given feature (int[])
-				label to class mapping
 
-Bayes/Perceptron/?.py:
+Bayes.py:
 	Arugments: none
 	Globals: 
 		training model data (int[][][])
@@ -53,6 +56,10 @@ Bayes/Perceptron/?.py:
 			output: 2
 				corresponding label (T)
 				accuracy (float)	
+
+driver.py:
+		
+
 
 Training model data file schema:
 	bData: 

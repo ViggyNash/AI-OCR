@@ -21,8 +21,8 @@ def getModelData(file = 'bData.txt')
 
 	for i in range(1, classCount)
 		line = list[i].split(' ')
-		for j = range(featCount)
-			for k = range(valCount)
+		for j in range(featCount)
+			for k in range(valCount)
 				modelData[i][j][k] = int(line[j * valCount + k])
 				classCount[i] += modelData[i][j][k]
 
@@ -52,8 +52,8 @@ def bayesTraining(FeaturesList, LabelsList, labelMapping, valRange)
 def bayesTest(inputFeatures, labelMapping)
 	
 	conditionalProbs = [1 for x in range(len(modelData))] # Counts for input feature value given class
-	for i = len(modelData)
-		for j = len(modelData[i])
+	for i in len(modelData)
+		for j in len(modelData[i])
 			conditionalProbs[i][j] *= modelData[i][j][inputFeatures[j]]	#Multiply the counts of the number of times the matching value
 																		#value for a given feature of a given class was seen
 	conditionalProbs = 	[conditionalProbs[x]/classCounts[x] for x in range(len(conditionalProbs))]
