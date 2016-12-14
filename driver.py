@@ -40,7 +40,7 @@ else:
 try:
 	labelFile = open(args[1],'r')
 except IOError:
-	print "IOError: Unable to open file "+args[1]"."
+	print "IOError: Unable to open file "+args[1]+"."
 	sys.exit()
 labels = labelFile.read().split('\n')
 trueLen = round(len(labels) / 10, 0) * 10
@@ -50,7 +50,7 @@ labels = labels(:trueLen)
 try:
 	dataFile = open(args[0],'r')
 except IOError:
-	print "IOError: Unable to open file "+args[0]"."
+	print "IOError: Unable to open file "+args[0]+"."
 	sys.exit()
 data = dataFile.read().split('\n')
 trueLen = round(len(data) / 10, 0) * 10
