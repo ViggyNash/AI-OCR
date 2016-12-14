@@ -24,32 +24,37 @@ Training.py:
 		extract:
 			input: 	1
 				training data segment (char[][])
-			return: 1
+			return: 3
 				feature values for segment (int[])
+				value range for given feature (int[])
+				label to class mapping
 
-Bayes.py:
+Bayes/Perceptron/?.py:
 	Arugments: none
 	Globals: 
 		training model data (int[][][])
+		total count for each class (int[])
 	Functions:
 		getModelData: gets model data from file and stores it in global variable
 			input: 	1
 				training model data file (string)
 			output: 0
 		bayesTraining: generate training model data and store to file
-			input: 	3
+			input: 	4
 				list of extracted feature values (int[][])
 				corresponding labels (T[])
 				label mapping (T[])
+				max value range (int)
 			output: 0
 		bayesTest: determine class of given input
-			input: 1
+			input: 	2
 				input features (int[][])
+				label mapping (T[])
 			output: 2
 				corresponding label (T)
 				accuracy (float)	
 
-Training model data file:
+Training model data file schema:
 	bData: 
 		First line is header: [# features]
 		Rows = classes
