@@ -27,8 +27,14 @@ def extract(data, type)
 
 # MAIN
 args = sys.argv
-mode = 0
-if len(args) 
+mode = 0 # 0 = training, 1 = testing
+if len(args) == 3
+	mode = 1
+if len(args) == 4
+	mode = 0
+else
+	print 'Invalid number of arguments'
+	sys.exit()
 
 #get labels
 try
@@ -51,7 +57,7 @@ trueLen = round(len(data) / 10, 0) * 10
 data = data(:trueLen)
 
 # determine data segment size and label mapping
-type = args[3]
+type = args[3].lower()
 size = 0
 labelMapping = []
 if type == 'number'
@@ -65,8 +71,22 @@ else
 	sys.exit()
 
 # build features list using extract function
+valRange
 featuresList = [len(data) / size]
 for i in range(len(data) / size)
-	featuresList[i] = extract(data[i * size:i * size + size], type)
+	featuresList[i], valRange = extract(data[i * size:i * size + size], type)
 
+assert len(featuresList)
 
+model = args[2].lower()
+if model == 'bayes'
+	# Bayes
+	bayesTraining(featuresList, labels, labelMapping, valRange)
+else if model == 'percept'
+	# Perceptron
+else if model == 'other'
+	# Other
+	print 'NOT YET IMPLEMENTED'
+else 
+	print 'Invalid model specified.'
+	sys.exit()

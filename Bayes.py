@@ -25,6 +25,7 @@ def getModelData(file = 'bData.txt')
 			for k in range(valCount)
 				modelData[i][j][k] = int(line[j * valCount + k])
 				classCount[i] += modelData[i][j][k]
+	fileObj.close()
 
 
 def bayesTraining(FeaturesList, LabelsList, labelMapping, valRange)
@@ -48,6 +49,7 @@ def bayesTraining(FeaturesList, LabelsList, labelMapping, valRange)
 		break;
 	except IOError
 		print "IOError: Unable to write model data to bData.txt, terminating training."
+	file.close()
 
 def bayesTest(inputFeatures, labelMapping)
 	

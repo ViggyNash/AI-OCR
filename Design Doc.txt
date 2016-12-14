@@ -21,8 +21,8 @@ driver.py
 		training model: ML Model to train ('bayes', 'perceptron', 'other')
 		data type: type of data ('number', 'face')
 	usage:
-		for training: driver [data file][label file][model to use]
-		for testing: drive [data file to test][model to use]
+		for training: driver [data file][label file][model to use][type]
+		for testing: drive [data file to test][model to use][type]
 
 	Functions:
 		extract:
