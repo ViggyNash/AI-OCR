@@ -18,7 +18,7 @@ def extract(data, type):
 		for j in range(size[4]):
 			for k in range(size[1]):
 				for l in range(size[2]):
-					if data[i * size[3] + k][j * size[4] + l] != 0
+					if data[i * size[3] + k][j * size[4] + l] != 0:
 						blockCounts[i * j] += 1
 	valRange = size[1] * size[2]
 
