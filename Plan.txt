@@ -1,8 +1,15 @@
 1) Build block feature detection
 2/3) Build Bayes/Perceptron
 
+UPDATE:
+1) Change extract function so that every 'pixel' is a separate feature
+2) Test/fix driver
+3/4) Test Perceptron and Bayes
+5) Look into MIRA and Nearest Neighbor algorithms
+
 To decide later:
-	Do we want to do horizontal component counting for feature detection in numbers?
-	What will our third model be?
-	Gradient-based block feature detection?
+	Do we want to do horizontal component counting for feature detection in numbers? (Only if we get bad accuracy for numbers)
+	What will our third model be? (MIRA vs Nearest Neighbor)
+	Gradient-based block feature detection? (likely no)
+	
 
