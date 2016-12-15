@@ -30,16 +30,16 @@ def getModelData(file = 'bData.txt'):
 def bayesTraining(FeaturesList, LabelsList, labelMapping, valRange):
 
 	output = ''
-	modelData = [len(labelMapping)][len(FeaturesList[0])][valRange]
-	classCounts = [len(labelMapping)]
-	
+	modelData = [[[0 for x in range(valRange)] for y in range(len(FeaturesList[0]))] for z in range(len(labelMapping))]
+	classCounts = [0 for x in range(len(labelMapping))]
+
 	for i in range(len(LabelsList)): 								#For each label
-		classIdx = labelMapping.index(LabelsList[i]) 				#Get the class index of the given label
+		classIdx = labelMapping.index(LabelsList[i])				#Get the class index of the given label
 		classCounts[classIdx] += 1
 		for j in range(len(FeaturesList)):							#For each item in the list
 			for k in range(len(FeaturesList[j])):					#For each feature the item has
-				modelData[classIdx][j][Features[j][k]] += 1			#Increment the counter of the corresponding value
-				output += str(modelData[classIdx][j][Features[j][k]]) +  ' '
+				modelData[classIdx][j][FeaturesList[j][k]] += 1			#Increment the counter of the corresponding value
+				output += str(modelData[classIdx][j][FeaturesList[j][k]]) +  ' '
 		output += '\n'
 
 	try:

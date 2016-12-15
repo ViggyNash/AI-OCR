@@ -1,9 +1,12 @@
 import Bayes
 import sys
+import numpy
+import re
 #import perceptron
 
 # feature extractor
 def extract(data, type):
+	'''
 	size = [4] # height/width of sub blocks, num blocks per column/row
 	if type == 'number':
 		size = [7,7,4,4]	#16 total blocks
@@ -22,7 +25,22 @@ def extract(data, type):
 					if data[i * size[2] + k][j * size[3] + l] != 0:
 						blockCounts[i * j] += 1
 	valRange = size[0] * size[1]
+	'''
+	size = [2] # height/width of sub blocks, num blocks per column/row
+	if type == 'number':
+		size = [28,28]	#16 total blocks
+	elif type == 'face':
+		size = [70,60] 	#42 total blocks
+	else:
+		print 'Invalid type.'
+		sys.exit()
 
+	blockCounts = [0 for x in range(size[0] * size[1])]
+	for i in range(size[0]):
+		for j in range(size[1]):
+			if data[i][j] != ' ':
+				blockCounts[i * size[0] + j] += 1
+	valRange = 2
 	return blockCounts, valRange
 #end extract function
 
@@ -41,9 +59,9 @@ else:
 try:
 	labelFile = open(args[2],'r')
 except IOError:
-	print "IOError: Unable to open file "+args[2]+"."
+	print "IOError: Unable to open labels file "+args[2]+"."
 	sys.exit()
-labels = labelFile.read().split('\n')
+labels = re.split('[\n\r]',labelFile.read())	#labelFile.read().split({'\n','\n\r'})
 trueLen = int(round(len(labels) / 10, 0) * 10)
 labels = labels[:trueLen]
 
@@ -51,7 +69,7 @@ labels = labels[:trueLen]
 try:
 	dataFile = open(args[1],'r')
 except IOError:
-	print "IOError: Unable to open file "+args[1]+"."
+	print "IOError: Unable to open data file "+args[1]+"."
 	sys.exit()
 data = dataFile.read().split('\n')
 trueLen = int(round(len(data) / 10, 0) * 10)
@@ -73,7 +91,7 @@ else:
 
 # build features list using extract function
 valRange = 0
-featuresList = [len(data) / size]
+featuresList = [[] for x in range(len(data) / size)]
 for i in range(len(data) / size):
 	featuresList[i], valRange = extract(data[i * size:i * size + size], type)
 
@@ -82,7 +100,7 @@ assert len(featuresList)
 model = args[3].lower()
 if model == 'bayes':
 	# Bayes
-	bayesTraining(featuresList, labels, labelMapping, valRange)
+	Bayes.bayesTraining(featuresList, labels, labelMapping, valRange)
 elif model == 'percept':
 	print 'NOT YET IMPLEMENTED'
 	# Perceptron
