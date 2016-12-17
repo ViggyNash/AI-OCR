@@ -32,7 +32,7 @@ class PerceptronClassifier:
     (and thus represents a vector a values).
     """
     
-    %self.features = trainingData[0].keys() # could be useful later
+    self.features = trainingData[0].keys() # could be useful later
     # DO NOT ZERO OUT YOUR WEIGHTS BEFORE STARTING TRAINING, OR
     # THE AUTOGRADER WILL LIKELY DEDUCT POINTS.
 
@@ -41,12 +41,12 @@ class PerceptronClassifier:
       print "Starting iteration ", iteration, "..."
       for i in range(len(trainingData)):
           "*** YOUR CODE HERE ***"
-          features = trainingData[i]
+          f = trainingData[i]
           label = trainingLabels[i]
-          guessedLabel = self.getLabelWithMaxScore(self.weights, features)
+          guessedLabel = self.getLabelWithMaxScore(self.weights, f)
           if (guessedLabel != label):
-            self.weights[label] += features
-            self.weights[guessedLabel] -= features
+            self.weights[label] += f
+            self.weights[guessedLabel] -= f
 
 
   def getLabelWithMaxScore(self, weights, features):
