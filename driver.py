@@ -6,6 +6,7 @@ import re
 
 # feature extractor
 def extract(data, type):
+	'''
 	size = [4] # height/width of sub blocks, num blocks per column/row
 	if type == 'number':
 		size = [7,7,4,4]	#16 total blocks
@@ -41,7 +42,7 @@ def extract(data, type):
 				blockCounts[i * size[0] + j] += 1
 	valRange = 2
 	return blockCounts, valRange
-	'''
+	
 #end extract function
 
 # MAIN
