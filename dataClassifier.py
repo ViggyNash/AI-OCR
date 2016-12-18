@@ -16,6 +16,7 @@ import mira
 import samples
 import sys
 import util
+import numpy
 
 TEST_SET_SIZE = 100
 DIGIT_DATUM_WIDTH=28
@@ -67,7 +68,27 @@ def enhancedFeatureExtractorDigit(datum):
   
   ##
   """
-  features =  basicFeatureExtractorDigit(datum)
+  size = [7,7,4,4]
+  threshold = 30
+  blockCounts = [0 for x in range(size[2] * size[3])]
+
+  a = datum.getPixels()
+
+  features = util.Counter()
+  for i in range(size[2]):
+    for j in range(size[3]):
+      for k in range(size[0]):
+        for l in range(size[1]):
+          if datum.getPixel(i * size[2] + k, j * size[3] + l) > 0:
+            blockCounts[i * size[2] + j] += 1
+      if blockCounts[i * size[2] + j] >= threshold:
+        features[(i,j)] = 1
+      else:
+        features[(i,j)] = 0
+  return features
+
+
+  #features =  basicFeatureExtractorDigit(datum)
 
   "*** YOUR CODE HERE ***"
   
@@ -325,6 +346,7 @@ def runClassifier(args, options):
   guesses = classifier.classify(testData)
   correct = [guesses[i] == testLabels[i] for i in range(len(testLabels))].count(True)
   print str(correct), ("correct out of " + str(len(testLabels)) + " (%.1f%%).") % (100.0 * correct / len(testLabels))
+  #print [str(guesses[i]) +" "+ str(testLabels[i]) for i in range(len(testLabels))]
   analysis(classifier, guesses, testLabels, testData, rawTestData, printImage)
   
   # do odds ratio computation if specified at command line
