@@ -102,7 +102,6 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
       guesses.append(posterior.argMax())
       self.posteriors.append(posterior)
     return guesses
-
   def calculateLogJointProbabilities(self, datum):
     """
     Returns the log-joint distribution over legal labels and the datum.
