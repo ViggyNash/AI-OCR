@@ -37,8 +37,10 @@ def basicFeatureExtractorDigit(datum):
     for y in range(DIGIT_DATUM_HEIGHT):
       if datum.getPixel(x, y) > 0:
         features[(x,y)] = 1
+        #print '1'
       else:
         features[(x,y)] = 0
+        #print '0'
   return features
 
 def basicFeatureExtractorFace(datum):
@@ -91,7 +93,23 @@ def enhancedFeatureExtractorDigit(datum):
   #features =  basicFeatureExtractorDigit(datum)
 
   "*** YOUR CODE HERE ***"
-  
+  size = [10,10,6,7]
+  threshold = 30
+  blockCounts = [0 for x in range(size[2] * size[3])]
+
+  a = datum.getPixels()
+
+  features = util.Counter()
+  for i in range(size[2]):
+    for j in range(size[3]):
+      for k in range(size[0]):
+        for l in range(size[1]):
+          if datum.getPixel(i * size[2] + k, j * size[3] + l) > 0:
+            blockCounts[i * size[2] + j] += 1
+      if blockCounts[i * size[2] + j] >= threshold:
+        features[(i,j)] = 1
+      else:
+        features[(i,j)] = 0
   return features
 
 

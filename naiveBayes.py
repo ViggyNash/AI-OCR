@@ -62,15 +62,18 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
     self.legalLabels.
     """
     "*** YOUR CODE HERE ***"
-    featureValCounts = [[[0 for x in range(2)] for y in range(len(self.features[0]))] for z in range(len(self.legalLabels))]
+    featureValCounts = [[[0 for x in range(2)] for y in range(len(self.features))] for z in range(len(self.legalLabels))]
     classCounts = [0 for x in range(len(self.legalLabels))]
-
+    print trainingData[16][9]
     # Count class instances and feature value instances
-    for i in range(len(trainingLabels)):                                #For each label
-      classCounts[self.legalLabels.index(trainingLabels[i])] += 1          #Increment the count of the correspondign class
-      for j in range(len(self.features[i])):                          #For each feature the item has
-        featureValCounts[trainingLabels[i]][j][trainingData[i][j]] += 1    #Increment the counter of the corresponding value
-    
+    for i in range(len(trainingLabels)):                                   #For each label
+      classCounts[self.legalLabels.index(trainingLabels[i])] += 1          #Increment the count of the corresponding class
+      for j in range(len(self.features)):                                  #For each feature the item has
+        featureValCounts[trainingLabels[i]][j][trainingData[i][self.features[j]]] += 1    #Increment the counter of the corresponding value
+        #print str(trainingData[i][self.features[j]]) + " " + str(featureValCounts[trainingLabels[i]][j][0]) +","+str(featureValCounts[trainingLabels[i]][j][1])
+      #print ''
+      #print trainingData[i]
+
     # Calculate class probabilities
     totalCount = sum(classCounts)
     self.classProbabilities = [classCounts[i]/float(totalCount) for i in range(len(classCounts))]
@@ -80,8 +83,12 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
 
     # Test different smoothing amount
     if self.automaticTuning:
+      print "Performing automatic tuning:"
+      accuracy = []
       for x in range(len(kgrid)):
+        print "\tTesting k = " + str(kgrid[x]) +":"
         self.k = kgrid[x]
+
         # Calculate feature value probabilities
         self.calcFeatureProbabilities(featureValCounts)
 
@@ -90,6 +97,7 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
 
         accuracy.append(comparison.count(True) / len(comparison))
       self.k = kgrid[accuracy.index(max(accuracy))]
+      print "Using k = " +str(self.k)+" for smoothing."
 
     self.calcFeatureProbabilities(featureValCounts)
 
@@ -101,6 +109,9 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
         count = sum(featureValCounts[i][j]) + (self.k * len(featureValCounts[i][j]))
         for k in range(len(featureValCounts[i][j])):
           self.featureProbabilities[i][j][k] = (featureValCounts[i][j][k] + self.k)/float(count)
+          #print self.featureProbabilities[i][j][k]
+        #print ''
+      #print ''
         
   def classify(self, testData):
     """
@@ -114,6 +125,7 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
       posterior = self.calculateLogJointProbabilities(datum)
       guesses.append(posterior.argMax())
       self.posteriors.append(posterior)
+    print guesses
     return guesses
   def calculateLogJointProbabilities(self, datum):
     """
@@ -125,16 +137,13 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
     self.legalLabels.
     """
     logJoint = util.Counter()
-    
     "*** YOUR CODE HERE ***"
     for i in range(len(self.legalLabels)):
       logJoint[i] += math.log(self.classProbabilities[i])
       for j in range(len(self.features)):
-        #for k in range(len(self.featureProbabilities[i][j])):
         if self.featureProbabilities[i][j][datum[j]] != 0:
           logJoint[i] += math.log(self.featureProbabilities[i][j][datum[j]])
 
-    #util.raiseNotDefined()
     return logJoint
   
   def findHighOddsFeatures(self, label1, label2):

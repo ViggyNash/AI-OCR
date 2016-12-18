@@ -35,13 +35,14 @@ class PerceptronClassifier:
     self.features = trainingData[0].keys() # could be useful later
     # DO NOT ZERO OUT YOUR WEIGHTS BEFORE STARTING TRAINING, OR
     # THE AUTOGRADER WILL LIKELY DEDUCT POINTS.
-
+    print trainingData[0][(16,9)]
 
     for iteration in range(self.max_iterations):
       print "Starting iteration ", iteration, "..."
       for i in range(len(trainingData)):
           "*** YOUR CODE HERE ***"
           f = trainingData[i]
+          #print f
           label = trainingLabels[i]
           guessedLabel = self.getLabelWithMaxScore(self.weights, f)
           if (guessedLabel != label):
