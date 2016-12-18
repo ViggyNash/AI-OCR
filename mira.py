@@ -8,6 +8,7 @@
 
 # Mira implementation
 import util
+import math
 PRINT = True
 
 class MiraClassifier:
@@ -55,7 +56,51 @@ class MiraClassifier:
     representing a vector of values.
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+
+    weightList = {}
+    highAccuracy = -1
+
+    for c in Cgrid:
+        weights = self.weights
+        for n in range(self.max_iterations):
+            for i in range(len(trainingData)):
+               
+                trueLabel = trainingLabels[i] 
+                bestLabel = None
+                bestScore = -1
+                
+                for label in self.legalLabels:
+                    score = trainingData[i] * weights[label]
+                    if score > bestScore:
+                        bestScore = score
+                        bestLabel = label
+
+                if bestLabel != trueLabel:
+                    f = trainingData[i]
+                    tau = min(c, ((weights[bestLabel] - weights[trueLabel]) * f + 1.0)/(2.0 * (f * f)))
+
+                    for x in f:
+                        f[x] = f[x] * tau
+
+                    weights[trueLabel] = weights[trueLabel] + f
+                    weights[bestLabel] = weights[bestLabel] - f
+
+
+        counter = 0
+        guesses = self.classify(validationData)
+        for i in range(len(guesses)):
+            if validationData[i] == guesses[i]:
+                counter += 1
+        accuracy = counter/len(guesses)
+
+        if accuracy > highAccuracy:
+            highAccuracy = accuracy
+            weightList = weights
+
+
+    self.weights = weightList
+
+
 
   def classify(self, data ):
     """
