@@ -18,6 +18,8 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
   (not to a raw samples.Datum).
   """
   def __init__(self, legalLabels):
+    self.classProbabilities = 0
+    self.featureProbabilities = 0
     self.legalLabels = legalLabels
     self.type = "naivebayes"
     self.k = 1 # this is the smoothing parameter, ** use it in your train method **
@@ -59,32 +61,33 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
     To get the list of all possible features or labels, use self.features and 
     self.legalLabels.
     """
+    "*** YOUR CODE HERE ***"
+    featureValCounts = [[[0 for x in range(2)] for y in range(len(self.features[0]))] for z in range(len(self.legalLabels))]
+    classCounts = [0 for x in range(len(self.legalLabels))]
 
-    self.modelData = [[[0 for x in range(valRange + 1)] for y in range(len(trainingData[0]))] for z in range(len(labelMapping))]
-    classCounts = [0 for x in range(len(labelMapping))]
-
-    print len(self.modelData[0][0])
-
+    # Count class instances and feature value instances
     for i in range(len(trainingLabels)):                                #For each label
-        self.classCounts[trainingLabels[i]] += 1
-        for j in range(len(trainingData[i])):                   #For each feature the item has
-            self.modelData[trainingLabels[i]][j][trainingData[i][j]] += 1        #Increment the counter of the corresponding value
-            
-
-    for i in range(len(self.modelData)):
-        for j in range(len(self.modelData[i])):
-            for k in range(len(self.modelData[i][j])):
-                output += str(self.modelData[i][j][k]) +  ' '
-        output += '\n'
-
-    try:
-        file = open('bData.txt','w')
-        file.write(output)
-    except IOError:
-        print "IOError: Unable to write model data to bData.txt, terminating training."
-    file.close()
+      classCounts[self.legalLabels.index(trainingLabels[i])] += 1          #Increment the count of the correspondign class
+      for j in range(len(self.features[i])):                          #For each feature the item has
+        featureValCounts[trainingLabels[i]][j][trainingData[i][j]] += 1    #Increment the counter of the corresponding value
     
-    util.raiseNotDefined()
+    # Calculate class probabilities
+    totalCount = sum(classCounts)
+    self.classProbabilities = [classCounts[i]/float(totalCount) for i in range(len(classCounts))]
+
+    # Determine smoothing amount
+    if len(kgrid) != 1:
+      self.k = kgrid[1]   #Needs to be changed manually
+
+    # Calculate feature value probabilities
+    self.featureProbabilities = [[[0 for x in range(2)] for y in range(len(self.features[0]))] for z in range(len(self.legalLabels))]
+    for i in range(len(featureValCounts)):
+      for j in range(len(featureValCounts[i])):
+        count = sum(featureValCounts[i][j]) + (self.k * len(featureValCounts[i][j]))
+        for k in range(len(featureValCounts[i][j])):
+          self.featureProbabilities[i][j][k] = (featureValCounts[i][j][k] + self.k)/float(count)
+
+    #util.raiseNotDefined()
         
   def classify(self, testData):
     """
@@ -99,7 +102,7 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
       guesses.append(posterior.argMax())
       self.posteriors.append(posterior)
     return guesses
-      
+
   def calculateLogJointProbabilities(self, datum):
     """
     Returns the log-joint distribution over legal labels and the datum.
@@ -112,8 +115,14 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
     logJoint = util.Counter()
     
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
-    
+    for i in range(len(self.legalLabels)):
+      logJoint[i] += math.log(self.classProbabilities[i])
+      for j in range(len(self.features)):
+        #for k in range(len(self.featureProbabilities[i][j])):
+        print str(j) + ":" + str(len(self.featureProbabilities[i]))
+        logJoint[i] += math.log(self.featureProbabilities[i][j][datum[j]])
+
+    #util.raiseNotDefined()
     return logJoint
   
   def findHighOddsFeatures(self, label1, label2):
@@ -126,7 +135,15 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
     featuresOdds = []
        
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    for i in range(len(self.features)):
+      featuresOdds[i] = (1, self.featureProbabilities[label1][i][1] / self.featureProbabilities[label2][i][1])
+
+    sortedOdds = sorted(featuresOdds, key = lambda item: item[0], reverse=True)
+    if len(sortedOdds) >= 100:
+      sortedOdds = sortedOdds[:100]
+
+    featuresOdds = [item[1] for item in sortedOdds]
+    #util.raiseNotDefined()
 
     return featuresOdds
     
