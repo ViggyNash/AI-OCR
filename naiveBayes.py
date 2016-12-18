@@ -75,19 +75,32 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
     totalCount = sum(classCounts)
     self.classProbabilities = [classCounts[i]/float(totalCount) for i in range(len(classCounts))]
 
-    # Determine smoothing amount
-    if len(kgrid) != 1:
-      self.k = kgrid[1]   #Needs to be changed manually
+    # Set up feature probabilities matrix
+    self.featureProbabilities = [[[0 for x in range(2)] for y in range(len(self.features))] for z in range(len(self.legalLabels))]
 
-    # Calculate feature value probabilities
-    self.featureProbabilities = [[[0 for x in range(2)] for y in range(len(self.features[0]))] for z in range(len(self.legalLabels))]
+    # Test different smoothing amount
+    if self.automaticTuning:
+      for x in range(len(kgrid)):
+        self.k = kgrid[x]
+        # Calculate feature value probabilities
+        self.calcFeatureProbabilities(featureValCounts)
+
+        guesses = self.classify(validationData)
+        comparison = [guesses[i] == validationLabels[i] for i in range(len(validationLabels))]
+
+        accuracy.append(comparison.count(True) / len(comparison))
+      self.k = kgrid[accuracy.index(max(accuracy))]
+
+    self.calcFeatureProbabilities(featureValCounts)
+
+    #util.raiseNotDefined()
+
+  def calcFeatureProbabilities(self, featureValCounts):
     for i in range(len(featureValCounts)):
       for j in range(len(featureValCounts[i])):
         count = sum(featureValCounts[i][j]) + (self.k * len(featureValCounts[i][j]))
         for k in range(len(featureValCounts[i][j])):
           self.featureProbabilities[i][j][k] = (featureValCounts[i][j][k] + self.k)/float(count)
-
-    #util.raiseNotDefined()
         
   def classify(self, testData):
     """
@@ -118,8 +131,8 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
       logJoint[i] += math.log(self.classProbabilities[i])
       for j in range(len(self.features)):
         #for k in range(len(self.featureProbabilities[i][j])):
-        print str(j) + ":" + str(len(self.featureProbabilities[i]))
-        logJoint[i] += math.log(self.featureProbabilities[i][j][datum[j]])
+        if self.featureProbabilities[i][j][datum[j]] != 0:
+          logJoint[i] += math.log(self.featureProbabilities[i][j][datum[j]])
 
     #util.raiseNotDefined()
     return logJoint
@@ -135,7 +148,7 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
        
     "*** YOUR CODE HERE ***"
     for i in range(len(self.features)):
-      featuresOdds[i] = (1, self.featureProbabilities[label1][i][1] / self.featureProbabilities[label2][i][1])
+      featuresOdds.append((1, self.featureProbabilities[label1][i][1] / self.featureProbabilities[label2][i][1]))
 
     sortedOdds = sorted(featuresOdds, key = lambda item: item[0], reverse=True)
     if len(sortedOdds) >= 100:
