@@ -9,6 +9,7 @@
 import util
 import classificationMethod
 import math
+import time
 
 class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
   """
@@ -62,9 +63,13 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
     self.legalLabels.
     """
     "*** YOUR CODE HERE ***"
+
+    # Begin timer
+    print 'Starting timer for naiveBayes training...'
+    start_time = time.time()
+
     featureValCounts = [[[0 for x in range(2)] for y in range(len(self.features))] for z in range(len(self.legalLabels))]
     classCounts = [0 for x in range(len(self.legalLabels))]
-    print trainingData[16][9]
     # Count class instances and feature value instances
     for i in range(len(trainingLabels)):                                   #For each label
       classCounts[self.legalLabels.index(trainingLabels[i])] += 1          #Increment the count of the corresponding class
@@ -101,7 +106,9 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
 
     self.calcFeatureProbabilities(featureValCounts)
 
-    #util.raiseNotDefined()
+    # Stop timer
+    elapsed_time = time.time() - start_time
+    print "naiveBayes training time = " + str(elapsed_time) + "s."
 
   def calcFeatureProbabilities(self, featureValCounts):
     for i in range(len(featureValCounts)):
@@ -125,7 +132,6 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
       posterior = self.calculateLogJointProbabilities(datum)
       guesses.append(posterior.argMax())
       self.posteriors.append(posterior)
-    print guesses
     return guesses
   def calculateLogJointProbabilities(self, datum):
     """
@@ -142,7 +148,7 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
       logJoint[i] += math.log(self.classProbabilities[i])
       for j in range(len(self.features)):
         if self.featureProbabilities[i][j][datum[j]] != 0:
-          logJoint[i] += math.log(self.featureProbabilities[i][j][datum[j]])
+          logJoint[i] += math.log(self.featureProbabilities[i][j][datum[self.features[j]]])
 
     return logJoint
   
@@ -162,7 +168,6 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
     sortedOdds = sorted(featuresOdds, key = lambda item: item[1], reverse=True)
     if len(sortedOdds) >= 100:
       sortedOdds = sortedOdds[:100]
-    print sortedOdds
 
     featuresOdds = [item[1] for item in sortedOdds]
     #util.raiseNotDefined()
