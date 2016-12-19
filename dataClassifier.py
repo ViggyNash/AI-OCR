@@ -67,7 +67,7 @@ def enhancedFeatureExtractorDigit(datum):
   for this datum (datum is of type samples.Datum).
   
   ## DESCRIBE YOUR ENHANCED FEATURES HERE...
-    Apply classifier on the Fourier Transform of the image since it is translation invariant
+    Apply classifier on the Fourier Transform of the image
   ##
   """
   a = datum.getPixels()
@@ -106,8 +106,33 @@ def enhancedFeatureExtractorFace(datum):
   """
   Your feature extraction playground for faces.
   It is your choice to modify this.
+
+  ## DESCRIBE YOUR ENHANCED FEATURES HERE...
+    Apply classifier on the Fourier Transform of the image
+  ##
   """
-  features =  basicFeatureExtractorFace(datum)
+  a = datum.getPixels()
+  datumArray = [[datum.getPixel(x,y) for y in range(DIGIT_DATUM_WIDTH)] for x in range(DIGIT_DATUM_HEIGHT)]
+  ft = np.fft.fft2(datumArray)
+  threshold = np.percentile(ft, 85)
+
+  features = util.Counter()
+  for x in range(DIGIT_DATUM_WIDTH):
+    for y in range(DIGIT_DATUM_HEIGHT):
+      if ft[x][y] > threshold:
+        features[(x,y)] = 1
+        #print '1'
+      else:
+        features[(x,y)] = 0
+        #print '0'
+  #print ''
+
+  for x in range(DIGIT_DATUM_WIDTH,DIGIT_DATUM_WIDTH*2):
+    for y in range(DIGIT_DATUM_HEIGHT):
+      if datum.getPixel(x - DIGIT_DATUM_WIDTH, y) > 0:
+        features[(x,y)] = 1
+      else:
+        features[(x,y)] = 0
   return features
 
 def analysis(classifier, guesses, testLabels, testData, rawTestData, printImage):
