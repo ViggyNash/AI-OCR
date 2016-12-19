@@ -31,11 +31,14 @@ class PerceptronClassifier:
     datum is a counter from features to values for those features
     (and thus represents a vector a values).
     """
+
+    # Begin timer
+    print 'Starting timer for naiveBayes training...'
+    start_time = time.time()
     
     self.features = trainingData[0].keys() # could be useful later
     # DO NOT ZERO OUT YOUR WEIGHTS BEFORE STARTING TRAINING, OR
     # THE AUTOGRADER WILL LIKELY DEDUCT POINTS.
-    print trainingData[0][(16,9)]
 
     for iteration in range(self.max_iterations):
       print "Starting iteration ", iteration, "..."
@@ -48,6 +51,10 @@ class PerceptronClassifier:
           if (guessedLabel != label):
             self.weights[label] += f
             self.weights[guessedLabel] -= f
+
+    # Stop timer
+    elapsed_time = time.time() - start_time
+    print "naiveBayes training time = " + str(elapsed_time) + "s."
 
 
   def getLabelWithMaxScore(self, weights, features):

@@ -58,6 +58,10 @@ class MiraClassifier:
     """
     "*** YOUR CODE HERE ***"
 
+    # Begin timer
+    print 'Starting timer for naiveBayes training...'
+    start_time = time.time()
+
     weightList = {}
     highAccuracy = -1
 
@@ -100,6 +104,10 @@ class MiraClassifier:
 
 
     self.weights = weightList
+
+    # Stop timer
+    elapsed_time = time.time() - start_time
+    print "naiveBayes training time = " + str(elapsed_time) + "s."
 
   def classify(self, data ):
     """
