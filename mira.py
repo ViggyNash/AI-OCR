@@ -9,6 +9,7 @@
 # Mira implementation
 import util
 import math
+import time
 
 PRINT = True
 

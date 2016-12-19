@@ -1,4 +1,6 @@
 import util
+import time 
+
 PRINT = True
 
 class PerceptronClassifier:
