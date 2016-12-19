@@ -60,7 +60,7 @@ class MiraClassifier:
     "*** YOUR CODE HERE ***"
 
     # Begin timer
-    print 'Starting timer for naiveBayes training...'
+    print 'Starting timer for mira training...'
     start_time = time.time()
 
     weightList = {}

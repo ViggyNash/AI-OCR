@@ -35,7 +35,7 @@ class PerceptronClassifier:
     """
 
     # Begin timer
-    print 'Starting timer for naiveBayes training...'
+    print 'Starting timer for perceptron training...'
     start_time = time.time()
     
     self.features = trainingData[0].keys() # could be useful later
