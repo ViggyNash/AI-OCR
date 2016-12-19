@@ -157,11 +157,12 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
        
     "*** YOUR CODE HERE ***"
     for i in range(len(self.features)):
-      featuresOdds.append((1, self.featureProbabilities[label1][i][1] / self.featureProbabilities[label2][i][1]))
+      featuresOdds.append((i, self.featureProbabilities[label1][i][1] / self.featureProbabilities[label2][i][1]))
 
-    sortedOdds = sorted(featuresOdds, key = lambda item: item[0], reverse=True)
+    sortedOdds = sorted(featuresOdds, key = lambda item: item[1], reverse=True)
     if len(sortedOdds) >= 100:
       sortedOdds = sortedOdds[:100]
+    print sortedOdds
 
     featuresOdds = [item[1] for item in sortedOdds]
     #util.raiseNotDefined()

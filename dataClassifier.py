@@ -16,7 +16,7 @@ import mira
 import samples
 import sys
 import util
-import numpy
+import numpy as np
 
 TEST_SET_SIZE = 100
 DIGIT_DATUM_WIDTH=28
@@ -67,49 +67,31 @@ def enhancedFeatureExtractorDigit(datum):
   for this datum (datum is of type samples.Datum).
   
   ## DESCRIBE YOUR ENHANCED FEATURES HERE...
-  
+    Apply classifier on the Fourier Transform of the image since it is translation invariant
   ##
   """
-  size = [7,7,4,4]
-  threshold = 30
-  blockCounts = [0 for x in range(size[2] * size[3])]
-
   a = datum.getPixels()
+  datumArray = [[datum.getPixel(x,y) for y in range(DIGIT_DATUM_WIDTH)] for x in range(DIGIT_DATUM_HEIGHT)]
+  ft = np.fft.fft2(datumArray)
+  threshold = np.percentile(ft, 99)
 
   features = util.Counter()
-  for i in range(size[2]):
-    for j in range(size[3]):
-      for k in range(size[0]):
-        for l in range(size[1]):
-          if datum.getPixel(i * size[2] + k, j * size[3] + l) > 0:
-            blockCounts[i * size[2] + j] += 1
-      if blockCounts[i * size[2] + j] >= threshold:
-        features[(i,j)] = 1
+  for x in range(DIGIT_DATUM_WIDTH):
+    for y in range(DIGIT_DATUM_HEIGHT):
+      if ft[x][y] > threshold:
+        features[(x,y)] = 1
+        #print '1'
       else:
-        features[(i,j)] = 0
-  return features
+        features[(x,y)] = 0
+        #print '0'
+  #print ''
 
-
-  #features =  basicFeatureExtractorDigit(datum)
-
-  "*** YOUR CODE HERE ***"
-  size = [10,10,6,7]
-  threshold = 30
-  blockCounts = [0 for x in range(size[2] * size[3])]
-
-  a = datum.getPixels()
-
-  features = util.Counter()
-  for i in range(size[2]):
-    for j in range(size[3]):
-      for k in range(size[0]):
-        for l in range(size[1]):
-          if datum.getPixel(i * size[2] + k, j * size[3] + l) > 0:
-            blockCounts[i * size[2] + j] += 1
-      if blockCounts[i * size[2] + j] >= threshold:
-        features[(i,j)] = 1
+  for x in range(DIGIT_DATUM_WIDTH,DIGIT_DATUM_WIDTH*2):
+    for y in range(DIGIT_DATUM_HEIGHT):
+      if datum.getPixel(x - DIGIT_DATUM_WIDTH, y) > 0:
+        features[(x,y)] = 1
       else:
-        features[(i,j)] = 0
+        features[(x,y)] = 0
   return features
 
 
